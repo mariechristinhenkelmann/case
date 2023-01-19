@@ -1,7 +1,7 @@
-/* README: this script contains 4 steps: staging & loading, transformation, datamarts and analysis view. written for snowflake.
+/* README: this script contains 4 steps: staging & loading, transformation, datamarts and analysis view. written for snowflake. */
 
 
-/* STEP 1: STAGING & LOADING 
+/* STEP 1: STAGING & LOADING */
 
 /* create database for staged data, fileformats etc. */
 create or replace database manage_db;
@@ -170,7 +170,7 @@ as (
 /*
 /* STEP 3: BUILDING A DATAMARTS (not implemented in this exersice, but could look like the following)
 /* list of some dims and fcts to be build, with an example code snippet for dim_company
-/* the proper implementation might impact the organisation of schema in the transformed database 
+/* the proper implementation might impact the organisation of schemas in the transformed database 
 
     - dim_company
     
