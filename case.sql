@@ -1,27 +1,26 @@
-// README: this script contains 4 steps: staging & loading, transformation, datamarts and analysis view. written for snowflake.
+/* README: this script contains 4 steps: staging & loading, transformation, datamarts and analysis view. written for snowflake.
 
 
-// STEP 1: STAGING & LOADING 
+/* STEP 1: STAGING & LOADING 
 
-// create database for staged data, fileformats etc. 
+/* create database for staged data, fileformats etc. */
 create or replace database manage_db;
 create or replace schema internal_stage;
 
 use database manage_db;
 use schema internal_stage;
 
-// create internal stage
+/* create internal stage */
 create or replace stage fortune1000sales
     file_format = (type = csv);   
     
 describe stage fortune1000sales;
 
-// upload data to stage
-// put file command over CLI SnowSQL
+/* upload data to stage: put file command over CLI SnowSQL */
 
 list @fortune1000sales;
 
-// create database, schema, table for raw data
+/* create database, schema, table for raw data */
 create or replace database raw;
 create or replace schema fortune1000;
 
@@ -44,7 +43,7 @@ create or replace table raw.fortune1000.sales (
     filename varchar(1000)
 );
 
-// copy data from stage into table
+/* copy data from stage into table */
 use database manage_db;
 use schema internal_stage;
 
@@ -92,14 +91,14 @@ copy into raw.fortune1000.sales(
 
 
 
-// STEP 2: TRANSFORMING
+/* STEP 2: TRANSFORMING */
 
-// create database, schema, table for transformed data
+/* create database, schema, table for transformed data */
 create database transformed;
 create schema analytics;
 
-// FROM RAW DATA
-// transforming table => stg_fortune1000_sales
+/* FROM RAW DATA */
+/* transforming table => stg_fortune1000_sales */
 create or replace view transformed.analytics.stg_fortune1000_sales 
 as ( 
     select 
@@ -126,11 +125,11 @@ select * from transformed.analytics.stg_fortune1000_sales
 limit 100;
 
 
-// FROM MARKETPLACE DATA
-// rename marketplace data
+/* FROM MARKETPLACE DATA */
+/* rename marketplace data */
 alter database gaialens_environmental_data_sample rename to marketplace_gaialens_esg;
 
-// transforming table => stg_fortune1000_esg
+/* transforming table => stg_fortune1000_esg */
 create or replace view transformed.analytics.stg_fortune1000_esg
 as (
     select
@@ -169,11 +168,11 @@ as (
 
 
 /*
-// STEP 3: BUILDING A DATAMARTS (not implemented in this exersice, but could look like the following)
-// list of some dims and fcts to be build, with an example code snippet for dim_company
-// the proper implementation might impact the organisation of schema in the transformed database 
+/* STEP 3: BUILDING A DATAMARTS (not implemented in this exersice, but could look like the following)
+/* list of some dims and fcts to be build, with an example code snippet for dim_company
+/* the proper implementation might impact the organisation of schema in the transformed database 
 
-    -- dim_company
+    - dim_company
     
             with unioned_sources (
                 select copmany_name from stg_fortune1000_sales
@@ -189,17 +188,17 @@ as (
                 company_name 
             from all_distinct_companies;
             
-    -- dim_sectors
-    -- dim_country
-    -- ...
-    -- fct_revenue
-    -- fct_emissions
-    -- ...
+    - dim_sectors
+    - dim_country
+    - ...
+    - fct_revenue
+    - fct_emissions
+    - ...
 */
 
 
 
-// STEP 4: CREATING CUSTOM VIEW FOR ANALYSIS/REPORTING
+/* STEP 4: CREATING CUSTOM VIEW FOR ANALYSIS/REPORTING */
 create or replace view transformed.analytics.reporting_fortune1000
 as (
     with sales as (
